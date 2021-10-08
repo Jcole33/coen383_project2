@@ -1,10 +1,9 @@
-public class Process {
+public class Process extends Clock {
     float arrivalTime;
     float endTime;
     int priority;
     float expectedRuntime;
     float timeLeft;
-    static float globalClock = 0;
     Process(float arrivalTime, int priority, float expectedRuntime) {
         this.arrivalTime = arrivalTime;
         this.priority = priority;
@@ -21,9 +20,9 @@ public class Process {
             this.timeLeft = 0;
         }
         if (this.timeLeft == 0) {
-            this.endTime = Process.globalClock + runtime;
+            this.endTime = globalClock + runtime;
         }
-        Process.globalClock += time;
+        globalClock += time;
         return this.timeLeft == 0;
     }
 
