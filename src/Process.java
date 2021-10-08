@@ -1,28 +1,27 @@
-public class Process extends Clock {
+public class Process {
     float arrivalTime;
     float endTime;
     int priority;
     float expectedRuntime;
     float timeLeft;
-    Process(float arrivalTime, int priority, float expectedRuntime) {
+    Clock globalClock;
+
+    Process(float arrivalTime, int priority, float expectedRuntime, Clock globalClock) {
         this.arrivalTime = arrivalTime;
         this.priority = priority;
         this.expectedRuntime = expectedRuntime;
         this.timeLeft = expectedRuntime;
+        this.globalClock = globalClock;
     }
+    
     boolean run(float time) {
-        float runtime;
-        if (time <= this.timeLeft) {
+        if (time < this.timeLeft) {
             this.timeLeft -= time;
-            runtime = time;
         } else {
-            runtime = this.timeLeft;
+            this.endTime = this.globalClock.time + this.timeLeft;
             this.timeLeft = 0;
         }
-        if (this.timeLeft == 0) {
-            this.endTime = globalClock + runtime;
-        }
-        globalClock += time;
+        this.globalClock.time += time;
         return this.timeLeft == 0;
     }
 
