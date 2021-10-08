@@ -9,9 +9,8 @@ public class HPFNonPrempt {
     Queue<Process> queue4 = new LinkedList<>();
 
     HPFNonPrempt(int processCount) {
-
         for (int i = 0; i < processCount; ++i) {
-
+            
         }
     }
 }
