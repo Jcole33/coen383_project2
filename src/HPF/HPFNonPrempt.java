@@ -1,9 +1,9 @@
 package HPF;
+
+import main.Clock;
+import main.Process;
+
 import java.util.Queue;
-
-import Clock;
-import Process;
-
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
