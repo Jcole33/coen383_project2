@@ -1,18 +1,18 @@
 public class Process {
-    int arrivalTime;
-    int endTime;
+    float arrivalTime;
+    float endTime;
     int priority;
-    int expectedRuntime;
-    int timeLeft;
-    static int globalClock = 0;
-    Process(int arrivalTime, int priority, int expectedRuntime) {
+    float expectedRuntime;
+    float timeLeft;
+    static float globalClock = 0;
+    Process(float arrivalTime, int priority, float expectedRuntime) {
         this.arrivalTime = arrivalTime;
         this.priority = priority;
         this.expectedRuntime = expectedRuntime;
         this.timeLeft = expectedRuntime;
     }
-    boolean run(int time) {
-        int runtime;
+    boolean run(float time) {
+        float runtime;
         if (time <= this.timeLeft) {
             this.timeLeft -= time;
             runtime = time;
