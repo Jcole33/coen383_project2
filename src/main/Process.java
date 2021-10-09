@@ -9,6 +9,8 @@ public class Process {
     float timeLeft;
     Clock globalClock;
     String name;
+    static Random rand = new Random(0);
+
 
     public Process(String name, Clock globalClock, float arrivalTime, int priority, float expectedRuntime) {
         this.name = name;
@@ -19,7 +21,6 @@ public class Process {
         this.globalClock = globalClock;
     }
     public Process(String name, Clock globalClock) {
-        Random rand = new Random(0);
         arrivalTime = (float) rand.nextInt(100); // will return numbetween 0 and 99
         expectedRuntime = (float) rand.nextInt(10) + 1; //will return num between 1 and 10
         priority = rand.nextInt(4) + 1;  //will return num between 1 and 4
@@ -58,6 +59,9 @@ public class Process {
     }
     public String getName() {
         return name;
+    }
+    public static void resetRNG() {
+        rand = new Random(0);
     }
 
 }
