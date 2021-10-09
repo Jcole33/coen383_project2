@@ -4,6 +4,7 @@ import java.util.Random;
 public class Process  implements Comparable<Process>  {
     float arrivalTime;
     float endTime;
+    float firstTime;
     int priority;
     float expectedRuntime;
     float timeLeft;
@@ -30,6 +31,9 @@ public class Process  implements Comparable<Process>  {
     }
     
     public boolean run(float time) {
+        if (timeLeft == expectedRuntime) {
+            firstTime = globalClock.getTime();
+        }
         if (time < timeLeft) {
             timeLeft -= time;
         } else {
@@ -59,6 +63,9 @@ public class Process  implements Comparable<Process>  {
     }
     public String getName() {
         return name;
+    }
+    public float getFirstTime() {
+        return firstTime;
     }
     public static void resetRNG() {
         rand = new Random(0);
