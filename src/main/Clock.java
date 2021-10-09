@@ -4,7 +4,7 @@ public class Clock {
     public float getTime() {
         return time;
     }
-    public void setTime(float time) {
-        this.time = time;
+    public void incrementTime(float increment) {
+        time += increment;
     }
 }
