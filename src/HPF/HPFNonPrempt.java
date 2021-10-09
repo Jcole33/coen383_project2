@@ -1,14 +1,15 @@
 package HPF;
 
-import java.util.Queue;
+import main.Process;
 
+import java.util.Queue;
 
 public class HPFNonPrempt extends HPF {
     
     public void run(float endTime) {
         while (getTime() < endTime) {
             addArrivals();
-            JProcess nextProcess = getNextProcess();
+            Process nextProcess = getNextProcess();
             if (nextProcess != null) {
                 nextProcess.run(nextProcess.getExpectedRuntime());
                 for (int i = 0; i < nextProcess.getExpectedRuntime(); ++i) {
@@ -23,8 +24,8 @@ public class HPFNonPrempt extends HPF {
         System.out.println(runString);
     }
 
-    public JProcess getNextProcess() {
-        Queue<JProcess> currentQueue = getNextQueue();
+    public Process getNextProcess() {
+        Queue<Process> currentQueue = getNextQueue();
         if (currentQueue != null) {
             return currentQueue.remove();
         }

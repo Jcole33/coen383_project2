@@ -1,5 +1,7 @@
 package HPF;
 
+import main.Process;
+
 import java.util.Queue;
 
 
@@ -8,7 +10,7 @@ public class HPFPrempt extends HPF {
     public void run(float endTime) {
         while (getTime() < endTime) {
             addArrivals();
-            JProcess nextProcess = getNextProcess();
+            Process nextProcess = getNextProcess();
             if (nextProcess != null) {
                 nextProcess.run(1);
                 runString += nextProcess.getName();
@@ -20,10 +22,10 @@ public class HPFPrempt extends HPF {
         System.out.println(runString);
     }
     
-    public JProcess getNextProcess() {
-        Queue<JProcess> currentQueue = getNextQueue();
+    public Process getNextProcess() {
+        Queue<Process> currentQueue = getNextQueue();
         if (currentQueue != null) {
-            JProcess nextProcess = currentQueue.peek();
+            Process nextProcess = currentQueue.peek();
             if (nextProcess.getTimeLeft() <= 1) {
                 currentQueue.remove();
             }
