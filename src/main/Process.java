@@ -9,7 +9,7 @@ public class Process {
     float timeLeft;
     Clock globalClock;
     String name;
-    static Random rand = new Random(0);
+    static Random rand = new Random(13);
 
 
     public Process(String name, Clock globalClock, float arrivalTime, int priority, float expectedRuntime) {
@@ -61,7 +61,7 @@ public class Process {
         return name;
     }
     public static void resetRNG() {
-        rand = new Random(0);
+        rand = new Random(13);
     }
 
 }
