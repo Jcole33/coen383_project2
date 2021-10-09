@@ -29,10 +29,10 @@ public class Process {
         if (time < timeLeft) {
             timeLeft -= time;
         } else {
-            endTime = globalClock.time + timeLeft;
+            endTime = globalClock.getTime() + timeLeft;
             timeLeft = 0;
         }
-        globalClock.time += time;
+        globalClock.incrementTime(time);
         return timeLeft == 0;
     }
     public float getArrivalTime() {
