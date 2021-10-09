@@ -53,5 +53,8 @@ public class Process {
     public float getEndTime() {
         return endTime;
     }
+    public String getName() {
+        return name;
+    }
 
 }
