@@ -14,19 +14,32 @@ public class HPF{
     Queue<JProcess> arrivalList;
     String runString = "";
 
-    public HPF(int processCount) {
+    public HPF() {
         //initialize priority level queues
         for (int i = 0; i < 4; ++i) {
             queueList.add(new LinkedList<JProcess>());
         }
         List<JProcess> processList = new ArrayList<JProcess>();
         //create new proceses
-        for (int i = 0; i < processCount; ++i) {
-            processList.add(new JProcess(globalClock));
-        }
+        processList.add(new JProcess("A", globalClock));
+        processList.add(new JProcess("B", globalClock));
+        processList.add(new JProcess("C", globalClock));
+        processList.add(new JProcess("D", globalClock));
+        processList.add(new JProcess("E", globalClock));
+        processList.add(new JProcess("F", globalClock));
+        processList.add(new JProcess("G", globalClock));
+        processList.add(new JProcess("H", globalClock));
+        processList.add(new JProcess("I", globalClock));
+
         //sorts processes by arrival time
         Collections.sort(processList);
         arrivalList = new LinkedList<JProcess>(processList);
+
+        for (int i = 0; i < arrivalList.size(); ++i) {
+            JProcess currentProcess = processList.get(i);
+            
+        }
+
     }
 
     public float getTime() {

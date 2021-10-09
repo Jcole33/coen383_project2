@@ -3,8 +3,8 @@ import main.Process;
 import main.Clock;
 
 public class JProcess extends Process implements Comparable<JProcess> {
-    JProcess(Clock globalClock) {
-        super(globalClock);
+    JProcess(String name, Clock globalClock) {
+        super(name, globalClock);
     }
 
     @Override
