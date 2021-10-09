@@ -1,5 +1,11 @@
+import HPF.HPFNonPrempt;
+import HPF.HPFPrempt;
+
 public class App {
     public static void main(String[] args) throws Exception {
-        System.out.println("Hello, World!");
+        HPFNonPrempt hpfNonPremptProcess = new HPFNonPrempt();
+        hpfNonPremptProcess.run(100);
+        HPFPrempt hpfPremptProcess = new HPFPrempt();
+        hpfPremptProcess.run(100);
     }
 }

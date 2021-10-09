@@ -34,10 +34,9 @@ public class HPF{
         //sorts processes by arrival time
         Collections.sort(processList);
         arrivalList = new LinkedList<JProcess>(processList);
-
+        System.out.println("Processes:");
         for (int i = 0; i < arrivalList.size(); ++i) {
-            JProcess currentProcess = processList.get(i);
-            
+            System.out.println(processList.get(i));
         }
 
     }
@@ -56,9 +55,9 @@ public class HPF{
     }
     
     public void addArrivals() {
-        while ( arrivalList.peek().getArrivalTime() <= getTime() ) {
+        while ( !arrivalList.isEmpty() && arrivalList.peek().getArrivalTime() <= getTime() ) {
             JProcess arrivingProcess = arrivalList.remove();
-            queueList.get(arrivingProcess.getPriority()).add(arrivingProcess);
+            queueList.get(arrivingProcess.getPriority() - 1).add(arrivingProcess);
         }
     }
 }

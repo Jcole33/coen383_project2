@@ -9,8 +9,13 @@ public class HPFPrempt extends HPF {
         while (getTime() < endTime) {
             addArrivals();
             JProcess nextProcess = getNextProcess();
-            nextProcess.run(1);
-            runString += nextProcess.getName();
+            if (nextProcess != null) {
+                nextProcess.run(1);
+                runString += nextProcess.getName();
+            } else {
+                runString += "*";
+                globalClock.incrementTime(1);
+            }
         }
         System.out.println(runString);
     }
