@@ -1,7 +1,7 @@
 package main;
 import java.util.Random;
 
-public class Process {
+public class Process  implements Comparable<Process>  {
     float arrivalTime;
     float endTime;
     int priority;
@@ -64,4 +64,14 @@ public class Process {
         rand = new Random(0);
     }
 
+    @Override
+    public int compareTo(Process otherProcess) {
+        if (getArrivalTime() > otherProcess.getArrivalTime()) {
+            return 1;
+        } else if (getArrivalTime() == otherProcess.getArrivalTime()) {
+            return 0;
+        } else {
+            return -1;
+        }
+    }
 }
