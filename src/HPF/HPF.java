@@ -12,6 +12,7 @@ public class HPF{
     Clock globalClock = new Clock();
     List<Queue<JProcess>> queueList = new ArrayList<Queue<JProcess>>();
     Queue<JProcess> arrivalList;
+    String runString = "";
 
     public HPF(int processCount) {
         //initialize priority level queues
@@ -27,7 +28,24 @@ public class HPF{
         Collections.sort(processList);
         arrivalList = new LinkedList<JProcess>(processList);
     }
+
     public float getTime() {
-        return globalClock.time;
+        return globalClock.getTime();
+    }
+    public Queue<JProcess> getNextQueue() {
+        for (int i = 0; i < 4; ++i) {
+            Queue<JProcess> currentQueue = queueList.get(i);
+            if (!currentQueue.isEmpty()) {
+                return currentQueue;
+            }
+        }
+        return null;
+    }
+    
+    public void addArrivals() {
+        while ( arrivalList.peek().getArrivalTime() <= getTime() ) {
+            JProcess arrivingProcess = arrivalList.remove();
+            queueList.get(arrivingProcess.getPriority()).add(arrivingProcess);
+        }
     }
 }
