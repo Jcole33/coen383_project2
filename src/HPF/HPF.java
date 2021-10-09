@@ -9,13 +9,18 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class HPF{
+public abstract class HPF {
     Clock globalClock = new Clock();
     List<Queue<Process>> queueList = new ArrayList<Queue<Process>>();
     Queue<Process> arrivalList;
     String runString = "";
+    int finishedProcessCount = 0;
+    float turnAroundTotal = 0;
+    float waitTotal = 0;
+    float responseTotal = 0;
 
-    public HPF() {
+    public HPF(int num) {
+        Process.setSeed(num);
         //initialize priority level queues
         for (int i = 0; i < 4; ++i) {
             queueList.add(new LinkedList<Process>());
@@ -63,12 +68,14 @@ public class HPF{
         //sorts processes by arrival time
         Collections.sort(processList);
         arrivalList = new LinkedList<Process>(processList);
-        System.out.println("Processes:");
+        /*System.out.println("Processes:");
         for (int i = 0; i < arrivalList.size(); ++i) {
             System.out.println(processList.get(i));
-        }
+        }*/
 
     }
+
+    public abstract void run(float endTime);
 
     public float getTime() {
         return globalClock.getTime();
@@ -90,7 +97,26 @@ public class HPF{
         }
     }
 
-    public void closeProcess(Process finishedProcess) {
+    public void tallyProcess(Process finishedProcess) {
+        ++finishedProcessCount;
+        responseTotal += finishedProcess.getFirstTime() - finishedProcess.getArrivalTime();
+        waitTotal += finishedProcess.getEndTime() - finishedProcess.getArrivalTime() - finishedProcess.getExpectedRuntime();
+        turnAroundTotal += finishedProcess.getEndTime() - finishedProcess.getArrivalTime();
+    }
 
+    public float getAvgResponse() {
+        return responseTotal / finishedProcessCount;
+    }
+    public float getAvgWait() {
+        return waitTotal / finishedProcessCount;
+    }
+    public float getAvgTurnAround() {
+        return turnAroundTotal / finishedProcessCount;
+    }
+    public int getThroughPut() {
+        return finishedProcessCount;
+    }
+    public void printStats() {
+        System.out.println("Average Response Time: " + getAvgResponse() + " Average Wait Time: " + getAvgWait() + " Average Turn Around Time: " + getAvgTurnAround() + " Throughput: " + getThroughPut());
     }
 }

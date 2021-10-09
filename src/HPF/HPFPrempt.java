@@ -7,12 +7,19 @@ import java.util.Queue;
 
 public class HPFPrempt extends HPF {
     
+    public HPFPrempt(int seed) {
+        super(seed);
+    }
+
     public void run(float endTime) {
         while (getTime() < endTime) {
             addArrivals();
             Process nextProcess = getNextProcess();
             if (nextProcess != null) {
-                nextProcess.run(1);
+                boolean finished = nextProcess.run(1);
+                if (finished) {
+                    tallyProcess(nextProcess);
+                }
                 runString += nextProcess.getName();
             } else {
                 runString += "*";

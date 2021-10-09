@@ -6,12 +6,19 @@ import java.util.Queue;
 
 public class HPFNonPrempt extends HPF {
     
+    public HPFNonPrempt(int seed) {
+        super(seed);
+    }
+
     public void run(float endTime) {
         while (getTime() < endTime) {
             addArrivals();
             Process nextProcess = getNextProcess();
             if (nextProcess != null) {
-                nextProcess.run(nextProcess.getExpectedRuntime());
+                boolean finished = nextProcess.run(nextProcess.getExpectedRuntime());
+                if (finished) {
+                    tallyProcess(nextProcess);
+                }
                 for (int i = 0; i < nextProcess.getExpectedRuntime(); ++i) {
                     runString += nextProcess.getName();
                 }
