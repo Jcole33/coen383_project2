@@ -38,6 +38,9 @@ public class Process {
         globalClock.incrementTime(time);
         return timeLeft == 0;
     }
+    public String toString() {
+        return "name: " + name + " arrivalTime: " + arrivalTime + " priority: " + priority + " expectedRuntime: " + expectedRuntime;
+    }
     public float getArrivalTime() {
         return arrivalTime;
     }
