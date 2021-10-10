@@ -5,36 +5,19 @@ import main.Process;
 import java.util.Queue;
 
 public class HPFNonPrempt extends HPF {
-    
-    public HPFNonPrempt(int seed) {
-        super(seed);
-    }
-
-    public void run(float endTime) {
-        while (getTime() < endTime) {
-            addArrivals();
-            Process nextProcess = getNextProcess();
-            if (nextProcess != null) {
-                boolean finished = nextProcess.run(nextProcess.getExpectedRuntime());
-                if (finished) {
-                    tallyProcess(nextProcess);
-                }
-                for (int i = 0; i < nextProcess.getExpectedRuntime(); ++i) {
-                    runString += nextProcess.getName();
-                }
-            } else {
-                runString += "*";
-                globalClock.incrementTime(1);
-            }
-            
-        }
-        System.out.println(runString);
+    Process lastProcess = null;
+    public HPFNonPrempt(int seed, boolean aging) {
+        super(seed, aging);
     }
 
     public Process getNextProcess() {
+        if (lastProcess != null && lastProcess.getTimeLeft() > 0) {
+            return lastProcess;
+        }
         Queue<Process> currentQueue = getNextQueue();
         if (currentQueue != null) {
-            return currentQueue.remove();
+            lastProcess = currentQueue.remove();
+            return lastProcess;
         }
         return null;
     }

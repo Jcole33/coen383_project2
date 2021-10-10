@@ -18,14 +18,18 @@ public abstract class HPF {
     float turnAroundTotal = 0;
     float waitTotal = 0;
     float responseTotal = 0;
+    int runningProcesses = 0;
+    float endTime;
+    boolean aging;
+    List<Process> processList = new ArrayList<Process>();
 
-    public HPF(int num) {
-        Process.setSeed(num);
+    public HPF(int seed, boolean aging) {
+        this.aging = aging;
+        Process.setSeed(seed);
         //initialize priority level queues
         for (int i = 0; i < 4; ++i) {
             queueList.add(new LinkedList<Process>());
         }
-        List<Process> processList = new ArrayList<Process>();
         //create new proceses
         processList.add(new Process("A", globalClock));
         processList.add(new Process("B", globalClock));
@@ -53,29 +57,51 @@ public abstract class HPF {
         processList.add(new Process("X", globalClock));
         processList.add(new Process("Y", globalClock));
         processList.add(new Process("Z", globalClock));
-        processList.add(new Process("1", globalClock));
-        processList.add(new Process("2", globalClock));
-        processList.add(new Process("3", globalClock));
-        processList.add(new Process("4", globalClock));
-        processList.add(new Process("5", globalClock));
-        processList.add(new Process("6", globalClock));
-        processList.add(new Process("7", globalClock));
-        processList.add(new Process("8", globalClock));
-        processList.add(new Process("9", globalClock));
-
-
 
         //sorts processes by arrival time
         Collections.sort(processList);
         arrivalList = new LinkedList<Process>(processList);
-        /*System.out.println("Processes:");
-        for (int i = 0; i < arrivalList.size(); ++i) {
-            System.out.println(processList.get(i));
-        }*/
 
     }
 
-    public abstract void run(float endTime);
+    public void run(float endTime) {
+        this.endTime = endTime;
+        while (checkRunCondition()) {
+            if (aging) {
+                checkForAge();
+            }
+            addArrivals();
+            Process nextProcess = getNextProcess();
+            if (nextProcess != null) {
+                if (nextProcess.getExpectedRuntime() == nextProcess.getTimeLeft()) {
+                    ++runningProcesses;
+                }
+                boolean finished = nextProcess.run(1);
+                if (finished) {
+                    --runningProcesses;
+                    tallyProcess(nextProcess);
+                }
+                runString += nextProcess.getName();
+            } else {
+                runString += "*";
+                globalClock.incrementTime(1);
+            }
+            if (globalClock.getTime() == endTime) {
+                runString += "|";
+            }
+        }
+        System.out.println(runString);
+    }
+
+    public abstract Process getNextProcess();
+
+    void beforeSelect() {
+        addArrivals();
+    }
+
+    public boolean checkRunCondition() {
+        return getTime() < endTime || runningProcesses > 0;
+    }
 
     public float getTime() {
         return globalClock.getTime();
@@ -83,13 +109,34 @@ public abstract class HPF {
     public Queue<Process> getNextQueue() {
         for (int i = 0; i < 4; ++i) {
             Queue<Process> currentQueue = queueList.get(i);
+            while (!currentQueue.isEmpty() && currentQueue.peek().getTimeLeft() < 1) {
+                currentQueue.remove();
+            }
             if (!currentQueue.isEmpty()) {
-                return currentQueue;
+                if (getTime() < endTime) {
+                    return currentQueue;
+                } else {
+                    if (currentQueue.peek().getExpectedRuntime() != currentQueue.peek().getTimeLeft()) {
+                        return currentQueue;
+                    }
+                }
             }
         }
         return null;
     }
     
+    void checkForAge() {
+        for (int i = queueList.size() - 1; i > 0; --i) {
+            Queue<Process> currentQueue = queueList.get(i);
+            Queue<Process> nextQueue = queueList.get(i - 1);
+            while (!currentQueue.isEmpty() && getTime() - currentQueue.peek().getLastTouchTime() >= 5) {
+                Process promotedProcess = currentQueue.remove();
+                promotedProcess.touch();
+                nextQueue.add(promotedProcess);
+            }
+        }
+    }
+
     public void addArrivals() {
         while ( !arrivalList.isEmpty() && arrivalList.peek().getArrivalTime() <= getTime() ) {
             Process arrivingProcess = arrivalList.remove();
@@ -118,5 +165,10 @@ public abstract class HPF {
     }
     public void printStats() {
         System.out.println("Average Response Time: " + getAvgResponse() + " Average Wait Time: " + getAvgWait() + " Average Turn Around Time: " + getAvgTurnAround() + " Throughput: " + getThroughPut());
+    }
+    public void printProcesses() {
+        for (int i = 0; i < arrivalList.size(); ++i) {
+            System.out.println(processList.get(i));
+        }
     }
 }

@@ -8,6 +8,7 @@ public class Process  implements Comparable<Process>  {
     int priority;
     float expectedRuntime;
     float timeLeft;
+    float lastTouchTime;
     Clock globalClock;
     String name;
     static Random rand = new Random(0);
@@ -18,7 +19,8 @@ public class Process  implements Comparable<Process>  {
         this.arrivalTime = arrivalTime;
         this.priority = priority;
         this.expectedRuntime = expectedRuntime;
-        this.timeLeft = expectedRuntime;
+        timeLeft = expectedRuntime;
+        lastTouchTime = arrivalTime;
         this.globalClock = globalClock;
     }
     public Process(String name, Clock globalClock) {
@@ -26,11 +28,13 @@ public class Process  implements Comparable<Process>  {
         expectedRuntime = (float) rand.nextInt(10) + 1; //will return num between 1 and 10
         priority = rand.nextInt(4) + 1;  //will return num between 1 and 4
         timeLeft = expectedRuntime;
+        lastTouchTime = arrivalTime;
         this.globalClock = globalClock;
         this.name = name;
     }
     
     public boolean run(float time) {
+        touch();
         if (timeLeft == expectedRuntime) {
             firstTime = globalClock.getTime();
         }
@@ -66,6 +70,12 @@ public class Process  implements Comparable<Process>  {
     }
     public float getFirstTime() {
         return firstTime;
+    }
+    public float getLastTouchTime() {
+        return lastTouchTime;
+    }
+    public void touch() {
+        lastTouchTime = globalClock.getTime();
     }
     public static void setSeed(int num) {
         rand = new Random(num);
