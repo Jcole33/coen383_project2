@@ -1,4 +1,3 @@
-package SJF;
 import java.util.*;
  
 class Process{
@@ -111,7 +110,8 @@ public class SJF {
 			
 		}
 		System.out.println ("\nAverage TurnAround time is: "+ (float)(avg_ta/n));
-		System.out.println ("Average Waiting is: "+ (float)(avg_wt/n));
+		System.out.println ("Average Waiting Time is: "+ (float)(avg_wt/n));
+        System.out.println ("Throughput is: "+ (float)(system_clock/n));
     }
 
 	public static void main(String args[])
