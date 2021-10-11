@@ -1,3 +1,4 @@
+package SRT;
 import java.util.*;
 import java.util.Random;
 
@@ -24,6 +25,7 @@ class Process
  
 public class SRT
 {
+    static int complete = 0;
     static void WaitingTime(Process proc[], int n,
                                      int wt[])
     {
@@ -33,11 +35,12 @@ public class SRT
         for (int i = 0; i < n; i++)
             rt[i] = proc[i].burst_time;//remaining time
       
-        int complete = 0, t = 0, minm = Integer.MAX_VALUE;
+        int t = 0, minm = Integer.MAX_VALUE;
         int shortest = 0, finish_time;
         boolean check = false;
       	int started_processes=0;
       	int res_total=0;
+        int throughput=0;
         // Process until all processes gets completed
         while (t<100 || started_processes!=0) {
       
@@ -62,8 +65,9 @@ public class SRT
       
       	    if(rt[shortest]==proc[shortest].burst_time)
             	{
+                    throughput++;
             		started_processes++;
-            		res_total=res_total+t;
+            		res_total=res_total+(t - proc[shortest].arrival_time);
             	}
             // decrement rt
             rt[shortest]--;
@@ -95,7 +99,7 @@ public class SRT
             // Increment time
             t++;            
         }
-        System.out.println("\nAverage throughput="+ (float)t/(float)complete);
+        System.out.println("\nthroughput="+ throughput);
         System.out.println("\nAverage response time="+ (float)res_total/(float)complete);
     }
       
@@ -135,9 +139,9 @@ public class SRT
         }
       
         System.out.println("Average waiting time = " +
-                          (float)total_wt / (float)n);
+                          (float)total_wt / (float)complete);
         System.out.println("Average turn around time = " +
-                           (float)total_tat / (float)n);
+                           (float)total_tat / (float)complete);
         
                                }
      
