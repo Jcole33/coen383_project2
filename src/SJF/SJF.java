@@ -122,9 +122,9 @@ public class SJF {
                 avg_response += proc[i].response;
             }
 		}
-		System.out.println ("\nAverage TurnAround time is: "+ (float)(avg_ta/n));
-		System.out.println ("Average Waiting is: "+ (float)(avg_wt/n));
-        System.out.println("Average Response Time: " + avg_response);
+		System.out.println ("\nAverage TurnAround time is: "+ (float)(avg_ta/ executed_processes));
+		System.out.println ("Average Waiting is: "+ (float)(avg_wt/ executed_processes));
+        System.out.println("Average Response Time: " + avg_response / executed_processes);
         System.out.println("Throughput: " + executed_processes);
     }
 }
