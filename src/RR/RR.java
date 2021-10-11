@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
-
+//main class that runs the Round Robin algorithm, in this case, we use a slice of time quanta as 1
 public class RR {
     Clock globalClock = new Clock();
     Queue<Process> arrivalList;
@@ -54,23 +54,29 @@ public class RR {
     public void run(float endTime) {
         this.endTime = endTime;
         while (checkRunCondition()) {
-
+            //preparing arrival queues and determine the next process to run
             addArrivals();
             Process nextProcess = getNextProcess();
+            //if there is a process to run
+            //check if process has never been run before, if so, add it to the total of running processes
             if (nextProcess != null) {
                 if (nextProcess.getExpectedRuntime() == nextProcess.getTimeLeft()) {
                     ++runningProcesses;
                 }
+                //run the process and return if the process is finished
                 boolean finished = nextProcess.run(1);
                 if (finished) {
+                    //if finished then decrease its running count and update the statistics on total runtime
                     --runningProcesses;
                     tallyProcess(nextProcess);
                 }
                 runString += nextProcess.getName();
             } else {
+                //use asterisk to represent idle time and move to next time for process
                 runString += "*";
                 globalClock.incrementTime(1);
             }
+            //similarly use | to seperate time 100 and the process that keeps running after since they are already in run
             if (globalClock.getTime() == endTime) {
                 runString += "|";
             }
@@ -79,14 +85,16 @@ public class RR {
         printStats();
     }
 
-
+    //
     public Process getNextProcess(){
         if (currentQueue != null) {
+            //check out current available queue for the very next process
             Process nextProcess = currentQueue.peek();
 
-            //if process will be finished on the next run then remove it from the queue entirely, otherwise leave it for later runs
+            //if process will be finished on the next run then remove it from the queue entirely for Round Robin purpose
             if (nextProcess!= null ) {
                 currentQueue.remove();
+                //if the process is not finished, then add it to the back of the current queue
                 if(nextProcess.getTimeLeft()!=1)
                     currentQueue.add(nextProcess);
             }
@@ -95,6 +103,7 @@ public class RR {
         return null;
     }
 
+    //keep running if time is less than 100 quanta or there are still partially completed processes
     public boolean checkRunCondition() {
         return getTime() < endTime || runningProcesses > 0;
     }
@@ -112,6 +121,7 @@ public class RR {
         }
     }
 
+    //once a process has finished its statistics are added to the running total
     public void tallyProcess(Process finishedProcess) {
         ++finishedProcessCount;
         responseTotal += finishedProcess.getFirstTime() - finishedProcess.getArrivalTime();
