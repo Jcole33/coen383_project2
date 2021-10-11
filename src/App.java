@@ -3,6 +3,7 @@ import HPF.HPFPrempt;
 import HPF.HPF;
 import SJF.SJF;
 import SRT.SRT;
+import RR.RR;
 public class App {
     public static void main(String[] args) throws Exception {
         for (int seed = 0; seed < 5; ++seed) {
@@ -24,6 +25,9 @@ public class App {
             SJF.Schedule(seed);
             System.out.println("Shortest Remaining Time:");
             SRT.run(seed);
+            RR RRProcess = new RR(seed);
+            System.out.println("RR:");
+            RRProcess.run(100);
         }
 
     }
