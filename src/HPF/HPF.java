@@ -15,10 +15,10 @@ public abstract class HPF {
     List<Queue<Process>> queueList = new ArrayList<Queue<Process>>(); //list of priority queues
     Queue<Process> arrivalList; //process list sorted by arrival time, used to mimic incoming processes
     String runString = "";
-    int finishedProcessCount = 0;
-    float turnAroundTotal = 0;
-    float waitTotal = 0;
-    float responseTotal = 0;
+    int[] finishedProcessCount = {0, 0, 0, 0};
+    List<Float> turnAroundTotal = new ArrayList<Float>();
+    List<Float> waitTotal = new ArrayList<Float>();
+    List<Float> responseTotal = new ArrayList<Float>();
     int runningProcesses = 0;
     float endTime; //how many quanta do you want to run this test for?
     boolean aging; //decides if this algorithm uses aging
@@ -29,6 +29,10 @@ public abstract class HPF {
         Process.setSeed(seed); //sets seed for random function used to reliably create random processes
         //initialize priority level queues
         for (int i = 0; i < 4; ++i) {
+            //initialize statistic arrays
+            turnAroundTotal.add(0.0f);
+            waitTotal.add(0.0f);
+            responseTotal.add(0.0f);
             queueList.add(new LinkedList<Process>());
         }
         //create new proceses
@@ -163,26 +167,63 @@ public abstract class HPF {
 
     //once a process has finished its statistics are added to the running total
     public void tallyProcess(Process finishedProcess) {
-        ++finishedProcessCount; //used for throughput
-        responseTotal += finishedProcess.getFirstTime() - finishedProcess.getArrivalTime(); //will be divided by throughput later to get average
-        waitTotal += finishedProcess.getEndTime() - finishedProcess.getArrivalTime() - finishedProcess.getExpectedRuntime(); //will be divided by throughput later to get average
-        turnAroundTotal += finishedProcess.getEndTime() - finishedProcess.getArrivalTime(); //will be divided by thorughput later to get average
+        int queueNum = finishedProcess.getPriority() - 1; // -1 because priorities are 1-4 and queues are 0-3
+        ++finishedProcessCount[queueNum]; //used for throughput
+        responseTotal.set(queueNum, responseTotal.get(queueNum)  + finishedProcess.getFirstTime() - finishedProcess.getArrivalTime()); //will be divided by throughput later to get average
+        waitTotal.set(queueNum, finishedProcess.getEndTime() - finishedProcess.getArrivalTime() - finishedProcess.getExpectedRuntime()); //will be divided by throughput later to get average
+        turnAroundTotal.set(queueNum, turnAroundTotal.get(queueNum) + finishedProcess.getEndTime() - finishedProcess.getArrivalTime()); //will be divided by thorughput later to get average
     }
-
-    public float getAvgResponse() {
-        return responseTotal / finishedProcessCount;
+    Float getTotal(List<Float> queue) {
+        Float total = 0f;
+        for (int i = 0; i < 4; ++i) {
+            total += queue.get(i);
+        }
+        return total;
     }
-    public float getAvgWait() {
-        return waitTotal / finishedProcessCount;
+    //get avg response time for a single queue
+    public float getAvgResponse(int queue) {
+        if (finishedProcessCount[queue] == 0) return 0; //just in case no proceesses were finished on queue
+        return responseTotal.get(queue) / finishedProcessCount[queue];
     }
-    public float getAvgTurnAround() {
-        return turnAroundTotal / finishedProcessCount;
+    //get avg response time for all queues
+    public float getTotalAvgResponse() {
+        return getTotal(responseTotal) / getTotalThroughPut();
     }
-    public int getThroughPut() {
-        return finishedProcessCount;
+    //get average wait time for a single queue
+    public float getAvgWait(int queue) {
+        if (finishedProcessCount[queue] == 0) return 0; //just in case no proceesses were finished on queue
+        return waitTotal.get(queue) / finishedProcessCount[queue];
+    }
+    //get average wait time for all queues
+    public float getTotalAvgWait() {
+        return getTotal(waitTotal) / getTotalThroughPut();
+    }
+    //get average turn around time for a single queue
+    public float getAvgTurnAround(int queue) {
+        if (finishedProcessCount[queue] == 0) return 0; //just in case no proceesses were finished on queue
+        return turnAroundTotal.get(queue) / finishedProcessCount[queue];
+    }
+    //get average turn around time for all queues
+    public float getTotalAvgTurnAround() {
+        return getTotal(turnAroundTotal) / getTotalThroughPut();
+    }
+    //get throughput for a single queue
+    public int getThroughPut(int queue) {
+        return finishedProcessCount[queue];
+    }
+    //get throughput for all queues
+    public int getTotalThroughPut() {
+        int total = 0;
+        for (int i = 0; i < 4; ++i) {
+            total += finishedProcessCount[i];
+        }
+        return total;
     }
     public void printStats() {
-        System.out.println("Average Response Time: " + getAvgResponse() + " Average Wait Time: " + getAvgWait() + " Average Turn Around Time: " + getAvgTurnAround() + " Throughput: " + getThroughPut());
+        for (int queue = 0; queue < 4; ++queue) {
+            System.out.println("Queue: " + queue + " Average Response Time: " + getAvgResponse(queue) + " Average Wait Time: " + getAvgWait(queue) + " Average Turn Around Time: " + getAvgTurnAround(queue) + " Throughput: " + getThroughPut(queue));
+        }
+        System.out.println("Total Average Response Time: " + getTotalAvgResponse() + " Total Average Wait Time: " + getTotalAvgWait() + " Total Average Turn Around Time: " + getTotalAvgTurnAround() + " Total Throughput: " + getTotalThroughPut());
     }
     public void printProcesses() {
         for (int i = 0; i < arrivalList.size(); ++i) {

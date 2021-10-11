@@ -1,5 +1,4 @@
 package SRT;
-import java.util.*;
 import java.util.Random;
 
 class Process
@@ -19,6 +18,9 @@ class Process
 	this.arrival_time = rand.nextInt(100); // will return numbetween 0 and 99
 	this.burst_time = rand.nextInt(10) + 1; //will return num between 1 and 10
 	this.priority = rand.nextInt(4) + 1; //will return num between 1 and 4 
+    }
+    public static void setSeed(int seed) {
+        rand = new Random(seed);
     }
     
 }
@@ -146,10 +148,9 @@ public class SRT
                                }
      
     // Driver Method
-    public static void main(String[] args)
+    public static void run(int seed)
     {
-    int a_min = 0,s_min=0;
-        int a_max = 100,s_max=10;
+    Process.setSeed(seed);
         Process proc[] = { new Process(1, 'A'),
                             new Process(2, 'B'),
                             new Process(3, 'C'),

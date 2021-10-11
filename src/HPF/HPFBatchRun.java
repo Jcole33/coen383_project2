@@ -24,10 +24,10 @@ public abstract class HPFBatchRun {
             currentRun.run(length);
             //currentRun.printStats();
             //adds new stats to running total
-            totalThroughPut += currentRun.getThroughPut();
-            totalAvgWait += currentRun.getAvgWait();
-            totalAvgResponse += currentRun.getAvgResponse();
-            totalAvgTurnAround += currentRun.getAvgTurnAround();
+            totalThroughPut += currentRun.getTotalThroughPut();
+            totalAvgWait += currentRun.getTotalAvgWait();
+            totalAvgResponse += currentRun.getTotalAvgResponse();
+            totalAvgTurnAround += currentRun.getTotalAvgTurnAround();
         }
     }
 
