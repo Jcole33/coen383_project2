@@ -8,12 +8,14 @@ System.out.println("Enter number of processes: ");
 int n = sc.nextInt();
 
 
-int pid[] = new int[n];   // process id
-int arr[] = new int[n];     // arrival time
-int bt[] = new int[n];     // burst time
+int pid[] = new int[n];       // process id
+int arr[] = new int[n];       // arrival time
+int bt[] = new int[n];        // burst time
 int compt[] = new int[n];     // completion time
-int tat[] = new int[n];     // turn around time
-int wt[] = new int[n];     // waiting time
+int tat[] = new int[n];       // turn around time
+int wt[] = new int[n];        // waiting time
+int rt[] = new int[n];		  // response time
+float throughput = 0;
 int temp;
 float avgwt=0,avgta=0;
  
@@ -65,12 +67,14 @@ compt[i] = compt[i-1] + bt[i];
 tat[i] = compt[i] - arr[i] ;          // Calculating Turn around Time which is Completion Time- Arrival time
 wt[i] = tat[i] - bt[i] ;          // Calculating Waiting Time which is Turn around Time- Burst Time
 avgwt += wt[i] ;               // Calculate Total Waiting Time
-avgta += tat[i] ;               // Calculate Total Turn around Time
+avgta += tat[i] ;  // Calculate Total Turn around Time
+rt[i] = Math.abs((tat[i - 1] + arr[i - 1]) - arr[i]);
+throughput = (float) n / ((float) (tat[n-1] + arr[n-1]) - arr[0]);
 }
-System.out.println("\npid  arrival  brust  complete turn waiting");
+System.out.println("\npid  arrival  burst  complete turn waiting");
 for(int  i = 0 ; i< n;  i++)
 {
-System.out.println(pid[i] + "  \t " + arr[i] + "\t" + bt[i] + "\t" + compt[i] + "\t" + tat[i] + "\t"  + wt[i] ) ;
+System.out.println(pid[i] + "  \t " + arr[i] + "\t" + bt[i] + "\t" + compt[i] + "\t" + tat[i] + "\t"  + wt[i] + "\t" + rt[i] + "\t" + throughput);
 }
 sc.close();
 System.out.println("\naverage waiting time: "+ (avgwt/n));     // Print average waiting time
