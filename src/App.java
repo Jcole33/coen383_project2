@@ -1,5 +1,6 @@
 import HPF.HPFNonPrempt;
 import HPF.HPFPrempt;
+import FCFS.FCFS;
 import HPF.HPF;
 import SJF.SJF;
 import SRT.SRT;
@@ -28,6 +29,8 @@ public class App {
             RR RRProcess = new RR(seed);
             System.out.println("RR:");
             RRProcess.run(100);
+            System.out.println("FCFS: ");
+            FCFS.run(seed);
         }
 
     }

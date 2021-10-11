@@ -50,16 +50,24 @@ public class FCFS {
         // finding completion times
         for (int i = 0; i < n; i++) {
             if (i == 0) {
+                for (int ii = 0; ii < arr[i]; ++ii) {
+                    runString += "*";
+                }
                 compt[i] = arr[i] + bt[i];
             } else {
                 if (arr[i] > compt[i - 1]) {
+                    for (int ii = 0; ii < arr[i] - compt[i-1]; ++ii) {
+                        runString += "*";
+                    }
                     compt[i] = arr[i] + bt[i];
-                } else
+                } else {
                     compt[i] = compt[i - 1] + bt[i];
+                }
             }
             for (int ii = 0; ii < bt[i]; ++ii) {
                 runString += name[i];
             }
+            
             if (i == 0) {
                 rt[0] = 0;
             } else {
