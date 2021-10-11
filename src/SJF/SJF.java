@@ -60,7 +60,7 @@ public class SJF {
 			int c = n,                //Currently executing process array index
                 min = 999;           //Setting min to higher number, to compare first minimum burst_time
             
-			if (executed_processes == n || system_clock > 100)        //All processes in the queue are executed
+			if (executed_processes == n )        //All processes in the queue are executed
 				break;                  
 			
 			for (int i = 0; i < n; i++)
@@ -85,8 +85,7 @@ public class SJF {
 				proc[c].tat  =   proc[c].completion_time   -   proc[c].arrival_time; 
 				proc[c].wt =   proc[c].tat  -   proc[c].burst_time; 
                 proc[c].rt = proc[c].wt;                                            //Equal to waiting time, since algorithm is non-preemptive
-				proc[c].f   =   1;
-                                                                  //Set flag to 1, since process has been executed
+				proc[c].f   =   1;                                                  //Set flag to 1, since process has been executed
 				executed_processes++;                                                  //increment executed processses
 			}
 		}
