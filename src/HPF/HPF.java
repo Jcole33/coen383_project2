@@ -94,6 +94,7 @@ public abstract class HPF {
             }
         }
         System.out.println(runString);
+        printStats();
     }
 
     //implemented in nonprempt and prempt HPF subclasses
