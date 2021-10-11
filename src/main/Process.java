@@ -19,8 +19,8 @@ public class Process  implements Comparable<Process>  {
         this.arrivalTime = arrivalTime;
         this.priority = priority;
         this.expectedRuntime = expectedRuntime;
-        timeLeft = expectedRuntime;
-        lastTouchTime = arrivalTime;
+        timeLeft = expectedRuntime; //initialize timeleft to full runtime
+        lastTouchTime = arrivalTime; //initialize last touch time to arrival time
         this.globalClock = globalClock;
     }
     //this constructor will randomly generate the values for you using the set random seed
@@ -28,8 +28,8 @@ public class Process  implements Comparable<Process>  {
         arrivalTime = (float) rand.nextInt(100); // will return numbetween 0 and 99
         expectedRuntime = (float) rand.nextInt(10) + 1; //will return num between 1 and 10
         priority = rand.nextInt(4) + 1;  //will return num between 1 and 4
-        timeLeft = expectedRuntime;
-        lastTouchTime = arrivalTime;
+        timeLeft = expectedRuntime; //initialize timeleft to full runtime
+        lastTouchTime = arrivalTime; //initialize last touch time to arrival time
         this.globalClock = globalClock;
         this.name = name;
     }
