@@ -7,6 +7,7 @@ class Process{
     Integer arrival_time;       //Time when a process arrives (According to System Clock)
     Integer burst_time;         //Time during which a process holds the CPU
     Integer tat;                //Turn-around time
+    Integer rt;                 //Response Time
     Integer wt;                 //Waiting time (Process has arrived, but not executing)
     Integer priority;
     Integer f = 0;              //Flag to indicate whether process has finished execution
@@ -16,9 +17,9 @@ class Process{
     { 
         this.id = pid; 
         this.name = name;
-        this.arrival_time = rand.nextInt(100); // will return numbetween 0 and 99
-        this.burst_time = rand.nextInt(10) + 1; //will return num between 1 and 10
-        this.priority = rand.nextInt(4) + 1;  //will return num between 1 and 4
+        this.arrival_time = rand.nextInt(100); // will return random number between 0 and 99
+        this.burst_time = rand.nextInt(10) + 1; //will return random number between 1 and 10
+        this.priority = rand.nextInt(4) + 1;  //will return random number between 1 and 4
     } 
 
 };
@@ -48,7 +49,9 @@ public class SJF {
         int system_clock = 0, 
             executed_processes = 0;
 
-		float avg_wt=0, avg_ta=0;
+		float avg_wt = 0, 
+              avg_ta = 0,
+              avg_rt = 0;
         
         int n = proc.length;
 	
@@ -81,6 +84,7 @@ public class SJF {
 				system_clock += proc[c].burst_time;                                 //Increment system clock after process execution
 				proc[c].tat  =   proc[c].completion_time   -   proc[c].arrival_time; 
 				proc[c].wt =   proc[c].tat  -   proc[c].burst_time; 
+                proc[c].rt = proc[c].wt;                                            //Equal to waiting time, since algorithm is non-preemptive
 				proc[c].f   =   1;                                                  //Set flag to 1, since process has been executed
 				executed_processes++;                                                  //increment executed processses
 			}
@@ -107,32 +111,22 @@ public class SJF {
 		{
 			avg_wt += proc[i].wt;
 			avg_ta += proc[i].tat;
+            avg_rt += proc[i].rt;
 			
 		}
-		System.out.println ("\nAverage TurnAround time is: "+ (float)(avg_ta/n));
-		System.out.println ("Average Waiting Time is: "+ (float)(avg_wt/n));
-        System.out.println ("Throughput is: "+ (float)(system_clock/n));
+        System.out.println ("\nAverage Response time is: "+ (float)(avg_rt/n));
+        System.out.println ("Average Waiting Time is: "+ (float)(avg_wt/n));
+		System.out.println ("Average TurnAround time is: "+ (float)(avg_ta/n));
+		System.out.println ("Throughput is: "+ (float)(system_clock/n));
     }
 
 	public static void main(String args[])
 	{   
-        // Process proc[] = { 
-        //     new Process(1, "A", 6, 5),  
-        //     new Process(2, "B" , 2, 5), 
-        //     new Process(3,"C" , 8, 27),  
-        //     new Process(4,"D" , 3, 0),
-        //     new Process(5, "E" , 4, 20)
-        
-        // };
-        int a_min = 0;      //Minimum arrival time
-        int a_max = 99;     //Maximum Arrival time
-        int s_min = 1;      //Minimum service time
-        int s_max = 9;      //Maximum service time
-        
+      
         for (int i = 0; i < SJF.proc.length; ++i ) {
             System.out.println("Arrival: " + SJF.proc[i].arrival_time + " runtime: " + SJF.proc[i].burst_time + " priority: " + SJF.proc[i].priority);
         }
-            //GENERATE PROCESSESS WITH RANDOM ARRIVAL AND SERVICE TIMES
+            
         Schedule();
 		
 		
