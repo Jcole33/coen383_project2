@@ -1,3 +1,4 @@
+package SJF;
 import java.util.*;
  
 class Process{
@@ -8,21 +9,43 @@ class Process{
     Integer burst_time;         //Time during which a process holds the CPU
     Integer tat;                //Turn-around time
     Integer wt;                 //Waiting time (Process has arrived, but not executing)
+    Integer priority;
     Integer f = 0;              //Flag to indicate whether process has finished execution
+    static Random rand = new Random(4);
     
-    public Process(int pid, String name, int bt, int at) //Constructor
+    public Process(int pid, String name) //Constructor
     { 
         this.id = pid; 
         this.name = name;
-        this.burst_time = bt; 
-        this.arrival_time = at;
+        this.arrival_time = rand.nextInt(100); // will return numbetween 0 and 99
+        this.burst_time = rand.nextInt(10) + 1; //will return num between 1 and 10
+        this.priority = rand.nextInt(4) + 1;  //will return num between 1 and 4
     } 
 
 };
 
 public class SJF {
-
-    public static void Schedule(Process proc[]){
+    public static Process proc[] = { 
+        new Process(1, "A"),  
+        new Process(2,"B" ), 
+        new Process(3,"C" ),  
+        new Process(4,"D" ),
+        new Process(5,"E" ),
+        new Process(6,"F" ),
+        new Process(7,"G" ),
+        new Process(8,"H" ),
+        new Process(9,"I" ),
+        new Process(10,"J" ),
+        new Process(11,"K" ),
+        new Process(12,"L" ),
+        new Process(13,"M"),
+        new Process(14,"N"),
+        new Process(15,"O"),
+        new Process(16,"P"),
+        new Process(17,"Q"),
+        new Process(18,"R") 
+    }; 
+    public static void Schedule(){
         int system_clock = 0, 
             executed_processes = 0;
 
@@ -106,24 +129,11 @@ public class SJF {
         int s_min = 1;      //Minimum service time
         int s_max = 9;      //Maximum service time
         
-
+        for (int i = 0; i < SJF.proc.length; ++i ) {
+            System.out.println("Arrival: " + SJF.proc[i].arrival_time + " runtime: " + SJF.proc[i].burst_time + " priority: " + SJF.proc[i].priority);
+        }
             //GENERATE PROCESSESS WITH RANDOM ARRIVAL AND SERVICE TIMES
-               Process proc[] = { new Process(1, "A", (int)Math.floor(Math.random()*(s_max-s_min+1)+s_min), (int)Math.floor(Math.random()*(a_max-a_min+1)+a_min) ),  
-                          new Process(2,"B" ,(int)Math.floor(Math.random()*(s_max-s_min+1)+s_min), (int)Math.floor(Math.random()*(a_max-a_min+1)+a_min)), 
-                          new Process(3,"C" ,(int)Math.floor(Math.random()*(s_max-s_min+1)+s_min), (int)Math.floor(Math.random()*(a_max-a_min+1)+a_min)),  
-                          new Process(4,"D" ,(int)Math.floor(Math.random()*(s_max-s_min+1)+s_min), (int)Math.floor(Math.random()*(a_max-a_min+1)+a_min)),
-                          new Process(5,"E" ,(int)Math.floor(Math.random()*(s_max-s_min+1)+s_min), (int)Math.floor(Math.random()*(a_max-a_min+1)+a_min)),
-                          new Process(6,"F" ,(int)Math.floor(Math.random()*(s_max-s_min+1)+s_min), (int)Math.floor(Math.random()*(a_max-a_min+1)+a_min)),
-                          new Process(7,"G" ,(int)Math.floor(Math.random()*(s_max-s_min+1)+s_min), (int)Math.floor(Math.random()*(a_max-a_min+1)+a_min)),
-                          new Process(8,"H" ,(int)Math.floor(Math.random()*(s_max-s_min+1)+s_min), (int)Math.floor(Math.random()*(a_max-a_min+1)+a_min)),
-                          new Process(9,"I" ,(int)Math.floor(Math.random()*(s_max-s_min+1)+s_min), (int)Math.floor(Math.random()*(a_max-a_min+1)+a_min)),
-                          new Process(10,"J" ,(int)Math.floor(Math.random()*(s_max-s_min+1)+s_min), (int)Math.floor(Math.random()*(a_max-a_min+1)+a_min)),
-                          new Process(11,"K" ,(int)Math.floor(Math.random()*(s_max-s_min+1)+s_min), (int)Math.floor(Math.random()*(a_max-a_min+1)+a_min)),
-                          new Process(12,"L" ,(int)Math.floor(Math.random()*(s_max-s_min+1)+s_min), (int)Math.floor(Math.random()*(a_max-a_min+1)+a_min))
-                                                  
-                           }; 
-		
-        Schedule(proc);
+        Schedule();
 		
 		
 	}
