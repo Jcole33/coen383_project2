@@ -1,8 +1,8 @@
+package FCFS;
 import java.util.*;
 
 public class FCFS {
-    public static void main(String args[]) {
-        Scanner sc = new Scanner(System.in);
+    public static void run(int seed) {
         int n = 18;
         String name[] = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R"};
         int p[] = new int[n]; //priority
@@ -19,7 +19,7 @@ public class FCFS {
         String runString = ""; //execution order string
 
        
-        Random rand = new Random(4);
+        Random rand = new Random(seed);
         for (int i = 0; i < n; i++) {
             arr[i] = rand.nextInt(100); // will return numbetween 0 and 99
             bt[i] = rand.nextInt(10) + 1; //will return num between 1 and 10
@@ -41,6 +41,9 @@ public class FCFS {
                     temp = pid[j];
                     pid[j] = pid[j + 1];
                     pid[j + 1] = temp;
+                    String nameTemp = name[j];
+                    name[j] = name[j + 1];
+                    name[j + 1] = nameTemp;
                 }
             }
         }
@@ -67,18 +70,17 @@ public class FCFS {
             avgwt += wt[i]; // Calculate Total Waiting Time
             avgta += tat[i]; // Calculate Total Turn around Time
             avgrt += rt[i];
+            ++throughput;
             if (compt[i] >= 99) break; //stop the simulation after last job completes either at end of time or right after it
         }
-        throughput = (float) n / ((float) (tat[n - 1] + arr[n - 1]) - arr[0]);
-        System.out.println("\npid  arrival  burst  complete turn waiting response");
+        System.out.println("\nname pid  arrival  burst  complete turn waiting response");
         for (int i = 0; i < n; i++) {
-            System.out.println(pid[i] + "  \t " + arr[i] + "\t" + bt[i] + "\t" + compt[i] + "\t" + tat[i] + "\t" + wt[i]
+            System.out.println(name[i] + "  \t" + pid[i] + "  \t " + arr[i] + "\t" + bt[i] + "\t" + compt[i] + "\t" + tat[i] + "\t" + wt[i]
                     + "\t" + rt[i]);
         }
-        sc.close();
-        System.out.println("\naverage response time: " + (avgrt / n)); // Print average waiting time
-        System.out.println("\naverage waiting time: " + (avgwt / n)); // Print average waiting time
-        System.out.println("average turnaround time:" + (avgta / n)); // Print average Turn around time
+        System.out.println("\naverage response time: " + (avgrt / throughput)); // Print average waiting time
+        System.out.println("\naverage waiting time: " + (avgwt / throughput)); // Print average waiting time
+        System.out.println("average turnaround time:" + (avgta / throughput)); // Print average Turn around time
         System.out.println("Throughput: " + throughput); //print out throughput
         System.out.println(runString);
     }
