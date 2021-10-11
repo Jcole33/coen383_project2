@@ -170,7 +170,7 @@ public abstract class HPF {
         int queueNum = finishedProcess.getPriority() - 1; // -1 because priorities are 1-4 and queues are 0-3
         ++finishedProcessCount[queueNum]; //used for throughput
         responseTotal.set(queueNum, responseTotal.get(queueNum)  + finishedProcess.getFirstTime() - finishedProcess.getArrivalTime()); //will be divided by throughput later to get average
-        waitTotal.set(queueNum, finishedProcess.getEndTime() - finishedProcess.getArrivalTime() - finishedProcess.getExpectedRuntime()); //will be divided by throughput later to get average
+        waitTotal.set(queueNum, waitTotal.get(queueNum) +  finishedProcess.getEndTime() - finishedProcess.getArrivalTime() - finishedProcess.getExpectedRuntime()); //will be divided by throughput later to get average
         turnAroundTotal.set(queueNum, turnAroundTotal.get(queueNum) + finishedProcess.getEndTime() - finishedProcess.getArrivalTime()); //will be divided by thorughput later to get average
     }
     Float getTotal(List<Float> queue) {
@@ -221,7 +221,7 @@ public abstract class HPF {
     }
     public void printStats() {
         for (int queue = 0; queue < 4; ++queue) {
-            System.out.println("Queue: " + queue + " Average Response Time: " + getAvgResponse(queue) + " Average Wait Time: " + getAvgWait(queue) + " Average Turn Around Time: " + getAvgTurnAround(queue) + " Throughput: " + getThroughPut(queue));
+            System.out.println("Priority: " + (queue + 1) + " Average Response Time: " + getAvgResponse(queue) + " Average Wait Time: " + getAvgWait(queue) + " Average Turn Around Time: " + getAvgTurnAround(queue) + " Throughput: " + getThroughPut(queue));
         }
         System.out.println("Total Average Response Time: " + getTotalAvgResponse() + " Total Average Wait Time: " + getTotalAvgWait() + " Total Average Turn Around Time: " + getTotalAvgTurnAround() + " Total Throughput: " + getTotalThroughPut());
     }

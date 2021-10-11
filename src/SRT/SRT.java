@@ -8,6 +8,7 @@ class Process
     int arrival_time; // Arrival Time
     char name;
     int priority;
+    int f; //finished flag
     static Random rand = new Random(4);
      
     public Process(int pid, char name)
@@ -86,6 +87,7 @@ public class SRT
                 // Increment complete
                 complete++;
                 check = false;
+            proc[shortest].f = 1;
       		 started_processes--;
                 // Find finish time of current process
                 finish_time = t + 1;
@@ -133,8 +135,10 @@ public class SRT
       
         // Calculate total waiting time and total turnaround time
         for (int i = 0; i < n; i++) {
-            total_wt = total_wt + wt[i];
-            total_tat = total_tat + tat[i];
+            if (proc[i].f == 1) { //ensure that the process being tallied actually finished
+                total_wt = total_wt + wt[i];
+                total_tat = total_tat + tat[i];
+            }
             System.out.println(" " + proc[i].name + "\t\t" + proc[i].arrival_time+"\t"
                              + proc[i].burst_time + "\t\t " + wt[i]
                              + "\t\t" + tat[i]);
