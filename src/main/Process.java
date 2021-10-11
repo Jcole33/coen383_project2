@@ -11,7 +11,7 @@ public class Process  implements Comparable<Process>  {
     float lastTouchTime; //the time the process was last "touched", "touched" means either process was given cpu time or was moved up in the priority tree by aging algorithm
     Clock globalClock;
     String name;
-    static Random rand = new Random(4); //default seed for random values is 0
+    static Random rand = new Random(4); //default seed for random values is 4
 
 
     public Process(String name, Clock globalClock, float arrivalTime, int priority, float expectedRuntime) {
