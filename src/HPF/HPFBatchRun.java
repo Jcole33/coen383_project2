@@ -8,7 +8,7 @@ public abstract class HPFBatchRun {
     float totalAvgWait = 0;
     float totalAvgResponse = 0;
     float totalAvgTurnAround = 0;
-    List<HPF> runList = new ArrayList<HPF>();
+    List<HPF> runList = new ArrayList<HPF>(); //list of HPF algorithm runs
 
     public HPFBatchRun(int times, boolean aging) {
         for (int i = 0; i < times; ++i) {
@@ -17,11 +17,13 @@ public abstract class HPFBatchRun {
         }
     }
 
+    //length determines how many instances of the HPF algorithm to run
     public void run(int length) {
         for (int i = 0; i < runList.size(); ++i) {
             HPF currentRun = runList.get(i);
             currentRun.run(length);
             //currentRun.printStats();
+            //adds new stats to running total
             totalThroughPut += currentRun.getThroughPut();
             totalAvgWait += currentRun.getAvgWait();
             totalAvgResponse += currentRun.getAvgResponse();
@@ -29,6 +31,7 @@ public abstract class HPFBatchRun {
         }
     }
 
+    //has to be made abstract in order to allow different types of hpf processes (nonprempt vs prempt) to generate their different classes and reuse the same batch code
     public abstract HPF getHPFProcess(int seed, boolean aging);
 
     public float getAvgResponse() {

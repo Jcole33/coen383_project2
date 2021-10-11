@@ -2,16 +2,16 @@ package main;
 import java.util.Random;
 
 public class Process  implements Comparable<Process>  {
-    float arrivalTime;
-    float endTime;
-    float firstTime;
-    int priority;
-    float expectedRuntime;
-    float timeLeft;
-    float lastTouchTime;
+    float arrivalTime; //time process arrives into algorithm
+    float endTime; //time process finishes running
+    float firstTime; //first time process is run, used to calculate response time
+    int priority; 
+    float expectedRuntime; //full runtime a process needs to run, is not changed as process is run
+    float timeLeft; //how much running time process has left to run, decreases as process is run
+    float lastTouchTime; //the time the process was last "touched", "touched" means either process was given cpu time or was moved up in the priority tree by aging algorithm
     Clock globalClock;
     String name;
-    static Random rand = new Random(0);
+    static Random rand = new Random(0); //default seed for random values is 0
 
 
     public Process(String name, Clock globalClock, float arrivalTime, int priority, float expectedRuntime) {
@@ -23,6 +23,7 @@ public class Process  implements Comparable<Process>  {
         lastTouchTime = arrivalTime;
         this.globalClock = globalClock;
     }
+    //this constructor will randomly generate the values for you using the set random seed
     public Process(String name, Clock globalClock) {
         arrivalTime = (float) rand.nextInt(100); // will return numbetween 0 and 99
         expectedRuntime = (float) rand.nextInt(10) + 1; //will return num between 1 and 10
@@ -33,19 +34,27 @@ public class Process  implements Comparable<Process>  {
         this.name = name;
     }
     
+    //set the seed for the process class' random generation
+    public static void setSeed(int num) {
+        rand = new Random(num);
+    }
+
     public boolean run(float time) {
+        //mark that this is the most recent time the process has been touched
         touch();
+        //if timeleft == expectedRuntime then the process has never been run before, this is the first time run
         if (timeLeft == expectedRuntime) {
             firstTime = globalClock.getTime();
         }
+        //if process is given less cpu time than it needs then just subtract off timeleft and nothing else
         if (time < timeLeft) {
             timeLeft -= time;
         } else {
-            endTime = globalClock.getTime() + timeLeft;
-            timeLeft = 0;
+            endTime = globalClock.getTime() + timeLeft; //if process is given enough or more than enough time to finish then mark their endtime as the time when they actually finished, not the alloted time
+            timeLeft = 0; //mark process as done
         }
-        globalClock.incrementTime(time);
-        return timeLeft == 0;
+        globalClock.incrementTime(time); //increment clock as time goes by
+        return timeLeft == 0; // if process is done then return true
     }
     public String toString() {
         return "name: " + name + " arrivalTime: " + arrivalTime + " priority: " + priority + " expectedRuntime: " + expectedRuntime;
@@ -74,13 +83,12 @@ public class Process  implements Comparable<Process>  {
     public float getLastTouchTime() {
         return lastTouchTime;
     }
+    //mark the updated time the process was last touched to now, used in aging algorithms 
     public void touch() {
         lastTouchTime = globalClock.getTime();
     }
-    public static void setSeed(int num) {
-        rand = new Random(num);
-    }
 
+    //make the process class sort by arrival time, useful in sorting arrival list when list of processes are generated
     @Override
     public int compareTo(Process otherProcess) {
         if (getArrivalTime() > otherProcess.getArrivalTime()) {
